@@ -20,14 +20,14 @@ class ExtractLink:
         self.soup = BeautifulSoup(article_html, "html.parser")
         self.soup = self.soup.find(id="mw-content-text")
 
-    def clean_parantheses(self, content):
-        ''' Remove content inside parantheses. '''
+    def clean_parentheses(self, content):
+        ''' Remove content inside parentheses. '''
         return re.sub(r'\([^)]*\)', '', content)
 
     def is_valid_link(self, href, paragraph):
         ''' A link is valid only if:
             1. It is not an external link or an anchor or a Help link.
-            2. It is not within parantheses.
+            2. It is not within parentheses.
         '''
         if not href or "#" in href or "//" in href or ":" in href \
         or "/wiki/" not in href or href not in paragraph:
