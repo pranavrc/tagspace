@@ -2,12 +2,14 @@
 
 from bs4 import BeautifulSoup
 import urllib2
+import wikipedia
 import re
+import sys
 
 class ExtractLink:
     def __init__(self, article_html):
         self.soup = BeautifulSoup(article_html, "html.parser")
-        self.cleaned_paragraph = None
+        self.soup = self.soup.find(id="mw-content-text")
 
     def clean_parantheses(self, content):
         return re.sub(r'\([^)]*\)', '', content)
@@ -27,21 +29,25 @@ class ExtractLink:
 
         return True
 
-    def get_first_paragraph(self):
-        self.cleaned_paragraph = self.soup.find_all('p')[0]
+    def is_valid_tag(self, tag):
+        return tag.name == 'p' or tag.name == 'ul'
 
-        return self.cleaned_paragraph
+    def get_paragraphs(self):
+        self.paragraphs = self.soup.find_all(self.is_valid_tag, recursive=False)
+
+        return self.paragraphs
 
     def iterate_links(self):
-        for each_link in self.cleaned_paragraph.find_all("a"):
-            href = each_link.get("href")
-            if self.is_valid_link(str(href), str(self.cleaned_paragraph)):
-                return each_link
+        for each_paragraph in self.paragraphs:
+            for each_link in each_paragraph.find_all("a"):
+                href = each_link.get("href")
+                if self.is_valid_link(str(href), str(each_paragraph)):
+                    return each_link
 
         return False
 
     def get_first_link(self):
-        self.get_first_paragraph()
+        self.get_paragraphs()
         first_link = self.iterate_links()
 
         return {"next_link": first_link.get('href'),
@@ -51,24 +57,40 @@ class ExtractLink:
 class IterateArticles:
     def __init__(self, start_page):
         self.start_page = start_page
-        self.start_url = "http://en.wikipedia.org/w/index.php?title=" + start_page + "&printable=yes"
+        self.base_url = "http://en.wikipedia.org/w/index.php?title="
 
     def get_page(self, address):
-        req = urllib2.Request(address, headers={'User-Agent' : "Magic Browser"})
-        return urllib2.urlopen(req).read()
+        req = urllib2.Request(address)
+        data = urllib2.urlopen(req).read()
+        return data
 
     def traverse(self):
         page_name = self.start_page
+        page_url = self.base_url + page_name + "&printable=yes"
         results = []
 
         while True:
             print page_name
             results.append(page_name)
 
-            article_html = self.get_page(self.start_url)
+            article_html = self.get_page(page_url)
             next_link_obj = ExtractLink(article_html).get_first_link()
 
-            page_name = next_link_obj['next_title']
+            page_name = next_link_obj['next_link'][6:]
+            page_url = self.base_url + page_name + "&printable=yes"            
 
             if page_name == 'Philosophy':
+                print 'Philosophy'
+                results.append('Philosophy')
                 return results
+
+if __name__ == "__main__":
+    if len(sys.argv) > 0:
+        try:
+            results = IterateArticles(sys.argv[1])
+            print results.traverse()
+        except IndexError:
+            print 'Format: python tagspace.py <page name>'
+    else:
+        print 'Format: python tagspace.py <page name>'
+
