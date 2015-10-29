@@ -32,7 +32,7 @@ class ExtractLink:
         if not href or "#" in href or "//" in href or ":" in href \
         or "/wiki/" not in href or href not in paragraph:
             return False
-        
+
         prefix = paragraph.split(href, 1)[0]
 
         if prefix.count("(") != prefix.count(")"):
@@ -89,24 +89,27 @@ class IterateArticles:
         recursively until Philosophy is reached. '''
         page_name = self.start_page
         page_url = self.base_url + page_name + "&printable=yes"
-        results = []
+        results = set()
 
         while True:
             sys.stdout.write(page_name + ' -> ')
             sys.stdout.flush()
 
-            results.append(page_name)
+            results.add(page_name)
 
             article_html = self.get_page(page_url)
             next_link_obj = ExtractLink(article_html).get_first_link()
 
             page_name = next_link_obj['next_link'][6:]
-            page_url = self.base_url + page_name + "&printable=yes"            
+            page_url = self.base_url + page_name + "&printable=yes"
 
             if page_name == 'Philosophy':
                 print 'Philosophy'
-                results.append('Philosophy')
+                results.add('Philosophy')
                 return results
+            elif page_name in results:
+                print 'Loop detected.'
+                return set()
 
 if __name__ == "__main__":
     if len(sys.argv) > 0:
