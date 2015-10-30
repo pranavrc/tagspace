@@ -89,13 +89,13 @@ class IterateArticles:
         recursively until Philosophy is reached. '''
         page_name = self.start_page
         page_url = self.base_url + page_name + "&printable=yes"
-        results = set()
+        results = []
 
         while True:
             sys.stdout.write(page_name + ' -> ')
             sys.stdout.flush()
 
-            results.add(page_name)
+            results.append(page_name)
 
             article_html = self.get_page(page_url)
             next_link_obj = ExtractLink(article_html).get_first_link()
@@ -105,11 +105,11 @@ class IterateArticles:
 
             if page_name == 'Philosophy':
                 print 'Philosophy'
-                results.add('Philosophy')
+                results.append('Philosophy')
                 return results
             elif page_name in results:
                 print 'Loop detected.'
-                return set()
+                return []
 
 if __name__ == "__main__":
     if len(sys.argv) > 0:
