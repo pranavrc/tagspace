@@ -88,7 +88,7 @@ class IterateArticles:
         ''' Traverse the first links from the start article,
         recursively until Philosophy is reached. '''
         page_name = self.start_page
-        page_url = self.base_url + page_name + "&printable=yes"
+        page_url = self.base_url + "+".join(page_name.split()) + "&printable=yes"
         results = []
 
         while True:
