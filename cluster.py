@@ -27,3 +27,16 @@ class ClusterTopics:
     def cluster(self):
         return self.graph.community_fastgreedy()
 
+class TopicRelation:
+    def __init__(self, articles):
+        self.articles = articles
+        self.article_paths = self.build_paths()
+
+    def find_intersection(self, results_x, results_y):
+        return set(results_x).intersection(results_y)
+
+    def build_paths(self):
+        article_paths = {}
+        for article in self.articles:
+            article_paths[article] = ts.IterateArticles(article).traverse()
+        return article_paths
