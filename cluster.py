@@ -11,6 +11,7 @@ class ClusterTopics:
         self.topics = topics
         self.graph = self.make_complete_graph()
         self.assign_edge_weights()
+        self.cluster = self.cluster()
 
     def make_complete_graph(self):
         graph = ig.Graph.Full(len(self.topics))
