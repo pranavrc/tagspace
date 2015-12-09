@@ -33,6 +33,7 @@ class TopicRelation:
     def __init__(self, articles):
         self.articles = articles
         self.article_paths = self.build_paths()
+        self.topic_weights = {}
 
     def find_intersection(self, results_x, results_y):
         return set(results_x).intersection(results_y)
@@ -46,6 +47,7 @@ class TopicRelation:
     def most_common_ancestor(self):
         ancestors = {}
         article_path_list = self.article_paths.values()
+
         for path in article_path_list:
             for topic_idx in range(path):
                 if path[topic_idx] in ancestors:
@@ -53,7 +55,10 @@ class TopicRelation:
                 else:
                     ancestors[path[topic_idx]] = 1 / (1 + topic_idx)
 
-        return max(ancestors.iteritems(), key=operator.itemgetter(1))[0]
+        max_topic = max(ancestors.iteritems(), key=operator.itemgetter(1))[0]
+        self.topic_weights[max_topic] = ancestors[max_topic]
+
+        return self.topic_weights
 
 
 def segment_sessions(queries, session_interval, accumulator=[]):
