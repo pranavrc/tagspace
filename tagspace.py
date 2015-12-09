@@ -76,13 +76,16 @@ class IterateArticles:
     the start article to Philosophy. '''
     def __init__(self, start_page):
         self.start_page = start_page
-        self.base_url = "http://en.wikipedia.org/w/index.php?title="
+        self.base_url = "http://en.wikipedia.org/w/index.php?search="
 
     def get_page(self, address):
         ''' Fetch html of the page from address. '''
-        req = urllib2.Request(address)
-        data = urllib2.urlopen(req).read()
-        return data
+        try:
+            req = urllib2.Request(address)
+            data = urllib2.urlopen(req).read()
+            return data
+        except urllib2.HTTPError, urllib2.URLError:
+            return None
 
     def traverse(self):
         ''' Traverse the first links from the start article,
@@ -98,17 +101,22 @@ class IterateArticles:
             results.append(page_name)
 
             article_html = self.get_page(page_url)
-            next_link_obj = ExtractLink(article_html).get_first_link()
 
-            page_name = next_link_obj['next_link'][6:]
-            page_url = self.base_url + page_name + "&printable=yes"
+            if article_html:
+                next_link_obj = ExtractLink(article_html).get_first_link()
 
-            if page_name == 'Philosophy':
-                print 'Philosophy'
-                results.append('Philosophy')
-                return results
-            elif page_name in results:
-                print 'Loop detected.'
+                page_name = next_link_obj['next_link'][6:]
+                page_url = self.base_url + "+".join(page_name.split()) + "&printable=yes"
+
+                if page_name == 'Philosophy':
+                    print 'Philosophy'
+                    results.append('Philosophy')
+                    return results
+                elif page_name in results:
+                    print 'Loop detected.'
+                    return results
+            else:
+                print '\n'
                 return results
 
 if __name__ == "__main__":
