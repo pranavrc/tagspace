@@ -111,13 +111,6 @@ class IterateArticles:
                 print 'Loop detected.'
                 return results
 
-
-def find_intersection(topic_x, topic_y):
-    "Find common ancestors between two topic paths."
-    results_x = IterateArticles(topic_x).traverse()
-    results_y = IterateArticles(topic_y).traverse()
-    return set(results_x).intersection(results_y)
-
 if __name__ == "__main__":
     if len(sys.argv) > 0:
         try:
