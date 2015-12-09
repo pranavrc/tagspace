@@ -4,6 +4,7 @@ import igraph as ig
 import tagspace as ts
 import itertools
 import operator
+from math import log10
 
 class ClusterTopics:
     def __init__(self, topics):
@@ -49,11 +50,11 @@ class TopicRelation:
         article_path_list = self.article_paths.values()
 
         for path in article_path_list:
-            for topic_idx in range(path):
+            for topic_idx in range(1, len(path)):
                 if path[topic_idx] in ancestors:
-                    ancestors[path[topic_idx]] += 1 / (1 + topic_idx)
+                    ancestors[path[topic_idx]] += 3.0 / topic_idx
                 else:
-                    ancestors[path[topic_idx]] = 1 / (1 + topic_idx)
+                    ancestors[path[topic_idx]] = 3.0 / topic_idx
 
         max_topic = max(ancestors.iteritems(), key=operator.itemgetter(1))[0]
         self.topic_weights[max_topic] = ancestors[max_topic]
@@ -65,13 +66,13 @@ def segment_sessions(queries, session_interval, accumulator=[]):
     end_time = queries[0][1] + session_interval
     session_list = []
 
-    for query_idx in range(queries):
+    for query_idx in range(len(queries)):
         if queries[query_idx][1] <= end_time:
             session_list.append(queries[query_idx][0])
         else:
             return segment_sessions(queries[query_idx:],
                                     session_interval,
-                                    accumulator.append(session_list))
+                                    accumulator=accumulator + [session_list])
 
-    return accumulator.append(session_list)
+    return accumulator + [session_list]
 
