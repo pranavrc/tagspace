@@ -8,13 +8,20 @@ Web query classification using analysis of inter-article relationships in Wikipe
 
 ``` 
 $ git clone https://github.com/pranavrc/tagspace.git
-$ cd tagspace/
-$ . bin/activate
 ```
 
 ##### From ZIP
 
 You can download the ZIP from [here](https://github.com/pranavrc/tagspace/archive/master.zip).
+
+### Installing dependencies
+
+```
+$ cd tagspace/
+$ virtualenv .
+$ pip install python-igraph beautifulsoup4
+$ . bin/activate
+```
 
 ### Running the code:
 
