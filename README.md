@@ -26,18 +26,13 @@ For instance, for the articles *Bacon* and *Networks*:
 
 ```
 $ python tagspace.py bacon bacon -> Domestic_pig -> Even-toed_ungulate -> Ungulate -> Clade -> Organism -> Biology ->
-
 Natural_science -> Science ->
-
 Knowledge -> Awareness -> Conscious -> Quality_(philosophy) -> Philosophy
 
 $ python tagspace.py networks networks -> Artificial_neural_network -> Machine_learning ->
-
 Computer_science -> Science ->
-
 Knowledge -> Awareness -> Conscious -> Quality_(philosophy) -> Philosophy
 
 $ python main.py
-
 Returns the final graph of tags, clustered into a dendrogram model. 
 ```
