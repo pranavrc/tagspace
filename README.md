@@ -20,7 +20,11 @@ You can download the ZIP from [here](https://github.com/pranavrc/tagspace/archiv
 
 To run the Python script from a terminal, we use the following command:
 
-`python tagspace.py <article-name>`
+````
+$ cd tagspace/
+$ . bin/activate
+$ python tagspace.py <article-name>
+```
 
 For instance, for the articles *Bacon* and *Networks*:
 
