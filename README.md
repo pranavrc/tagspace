@@ -2,28 +2,23 @@
 
 Web query classification using analysis of inter-article relationships in Wikipedia .
 
-### Getting the code:
+### Installing
+
+##### From ZIP
+
+The ZIP, bundled with dependencies, can be downloaded from [here](https://github.com/pranavrc/tagspace/raw/master/tagspace.zip).
 
 ##### With git
 
 ``` 
-$ git clone https://github.com/pranavrc/tagspace.git
-```
-
-##### From ZIP
-
-You can download the ZIP from [here](https://github.com/pranavrc/tagspace/archive/master.zip).
-
-### Installing dependencies
-
-```
+$ git clone https://github.com/pranavrc/tagspace.```
 $ cd tagspace/
 $ virtualenv .
 $ pip install python-igraph beautifulsoup4
 $ . bin/activate
 ```
 
-### Running the code:
+### Running the code
 
 To run the Python script from a terminal, we use the following command:
 
@@ -31,6 +26,7 @@ To run the Python script from a terminal, we use the following command:
 $ cd tagspace/
 $ . bin/activate
 $ python tagspace.py <article-name>
+$ python main.py
 ```
 
 For instance, for the articles *Bacon* and *Networks*:
